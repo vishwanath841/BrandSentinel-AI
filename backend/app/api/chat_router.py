@@ -91,8 +91,10 @@ GUIDELINES FOR YOUR RESPONSES:
                     reply_text = (msg.get("content") or msg.get("reasoning_content") or "").strip()
                     if reply_text:
                         return ChatResponse(reply=reply_text, model_used="Sentinel AI Copilot")
-        except Exception:
-            pass
+                else:
+                    print(f"Chatbot LLM failed with HTTP {resp.status_code}: {resp.text[:200]}", flush=True)
+        except Exception as e:
+            print(f"Chatbot LLM request error: {str(e)}", flush=True)
 
     # 2. Try Gemini (Tier 1)
     gemini_key = get_active_gemini_key()

@@ -19,12 +19,12 @@ class Settings(BaseModel):
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
     gemini_backup_keys: str = os.getenv("GEMINI_BACKUP_KEYS", "")
     gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
-    custom_llm_endpoint: str = os.getenv("CUSTOM_LLM_ENDPOINT", "")
-    custom_llm_api_key: str = os.getenv("CUSTOM_LLM_API_KEY", "")
-    # Local LLM (Ollama / LM Studio / any OpenAI-compatible endpoint)
-    local_llm_endpoint: str = os.getenv("LOCAL_LLM_ENDPOINT", "http://localhost:11434/v1")
-    local_llm_model: str = os.getenv("LOCAL_LLM_MODEL", "llama3.2")
-    local_llm_enabled: bool = os.getenv("LOCAL_LLM_ENABLED", "false").lower() in ("true", "1", "yes")
+    custom_llm_endpoint: str = os.getenv("CUSTOM_LLM_ENDPOINT", "https://integrate.api.nvidia.com/v1")
+    custom_llm_api_key: str = os.getenv("CUSTOM_LLM_API_KEY", "") or os.getenv("NVIDIA_API_KEY", "")
+    # Cloud / Local LLM (NVIDIA NIM / Ollama / LM Studio / any OpenAI-compatible endpoint)
+    local_llm_endpoint: str = os.getenv("LOCAL_LLM_ENDPOINT", "https://integrate.api.nvidia.com/v1")
+    local_llm_model: str = os.getenv("LOCAL_LLM_MODEL", "nvidia/nemotron-3.5-super-vl-120b-a12b")
+    local_llm_enabled: bool = os.getenv("LOCAL_LLM_ENABLED", "true").lower() in ("true", "1", "yes")
     cors_origins: List[str] = [
         "http://localhost:5173",
         "http://localhost:3000",

@@ -28,13 +28,16 @@ def get_llm_headers() -> Dict[str, str]:
 
 
 def is_local_llm_available() -> bool:
-    """Quick health-check — returns True only if the endpoint responds."""
+    """Quick health-check — returns True only if the endpoint responds and auth is valid."""
     if not settings.local_llm_enabled:
+        return False
+    token = (settings.custom_llm_api_key or os.getenv("CUSTOM_LLM_API_KEY", "") or os.getenv("NVIDIA_API_KEY", "")).strip()
+    # Cloud endpoints (like NVIDIA NIM) require an API key
+    if ("nvidia.com" in settings.local_llm_endpoint.lower() or settings.local_llm_endpoint.startswith("https://")) and not token:
         return False
     try:
         url = settings.local_llm_endpoint.rstrip("/")
-        # Ollama exposes /v1/models; LM Studio and NVIDIA the same
-        with httpx.Client(timeout=3.0) as client:
+        with httpx.Client(timeout=8.0) as client:
             resp = client.get(f"{url}/models", headers=get_llm_headers())
             return resp.status_code == 200
     except Exception:

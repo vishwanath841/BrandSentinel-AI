@@ -108,6 +108,7 @@ def run_comprehensive_inspection(
             engine_used = f"LOCAL_LLM ({model_name})"
         else:
             engine_used = f"GEMINI_HYBRID ({model_name})"
+        print(f"Inspection Engine: successfully used {engine_used}", flush=True)
         # Incorporate LLM findings if unique
         existing_flagged = {f["flagged_text"].lower() for f in all_findings}
         for gf in llm_result.get("findings", []):
@@ -134,6 +135,7 @@ def run_comprehensive_inspection(
         # TIER 3: Context-Aware Semantic NLP Engine (Evaluates clause negations & disclaimers)
         semantic_res = run_contextual_semantic_analysis(text, brand, brand.rules, brand.approved_facts)
         engine_used = "CONTEXTUAL_SEMANTIC_ENGINE (Local NLP)"
+        print(f"Inspection Engine: using {engine_used}", flush=True)
         # Merge semantic insights
         existing_flagged = {f["flagged_text"].lower() for f in all_findings}
         for sf in semantic_res.get("findings", []):
