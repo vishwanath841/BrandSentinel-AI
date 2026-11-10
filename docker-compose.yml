@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  brandsentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: brandsentinel-ai
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_BACKUP_KEYS=${GEMINI_BACKUP_KEYS:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
+      - LOCAL_LLM_ENABLED=${LOCAL_LLM_ENABLED:-true}
+      - LOCAL_LLM_ENDPOINT=${LOCAL_LLM_ENDPOINT:-https://integrate.api.nvidia.com/v1}
+      - LOCAL_LLM_MODEL=${LOCAL_LLM_MODEL:-nvidia/nemotron-3.5-super-vl-120b-a12b}
+      - CUSTOM_LLM_API_KEY=${CUSTOM_LLM_API_KEY:-}
+      - PORT=8000
+    volumes:
+      # Persist SQLite database and uploads across container restarts
+      - ./backend/brandsentinel.db:/app/backend/brandsentinel.db
+      - ./backend/uploads:/app/backend/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
