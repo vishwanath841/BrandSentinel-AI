@@ -154,7 +154,7 @@ async def create_submission(
     extracted_text = (text_content or "").strip()
 
     if file and file.filename:
-        original_filename = file.filename
+        original_filename = Path(file.filename).name
         ext = Path(original_filename).suffix.lower()
         unique_name = f"{uuid.uuid4().hex}_{original_filename}"
         dest_path = settings.upload_dir / unique_name
